@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151d">
+  <title>Multivap Portal | Toyota Johannesburg Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+  <!-- Shared vector icons: replace with your dealership icon system later. -->
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 3.5 6v6c0 5 8.5 9 8.5 9s8.5-4 8.5-9V6L12 3Z"/></symbol>
+    <symbol id="calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v5m8-5v5M4 11h16"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="document" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 4h6"/></symbol>
+    <symbol id="car" viewBox="0 0 24 24"><path d="m4 10 2-5h11l3 5M3 10h18v8H3v-8Zm3 8v3m12-3v3M6 14h2m8 0h2"/></symbol>
+    <symbol id="wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="m12 3 0 6m0 6v6M3 12h6m6 0h6M6 6l4 4m4 4 4 4M6 18l4-4m4-4 4-4"/></symbol>
+    <symbol id="tool" viewBox="0 0 24 24"><path d="M21 3a6 6 0 0 1-8 8L5 20a2 2 0 0 1-3-3l9-8a6 6 0 0 1 8-8l-4 4 3 3 3-5Z"/></symbol>
+    <symbol id="layers" viewBox="0 0 24 24"><path d="m12 3 10 6-10 6L2 9l10-6Zm-10 12 10 6 10-6M2 12l10 6 10-6"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="phone" viewBox="0 0 24 24"><path d="m5 3 4 5-3 3c2 3 4 5 7 7l3-3 5 4c-2 5-7 3-12-2S2 5 5 3Z"/></symbol>
+    <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="bars" viewBox="0 0 24 24"><path d="M5 20v-6m7 6V9m7 11V3"/></symbol>
+  </svg>
+  <!-- Persistent demo notice. Remains visible when dialogs are dismissed. -->
+  <div class="demo-banner" role="note"><span class="notice-mark" aria-hidden="true">!</span><span><strong>DEMO MODE</strong> — This portal is for preview purposes and will remain active for 7 days.</span></div>
+  <!-- Dealership navigation and mock authenticated identity. -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#main" aria-label="Multivaps x Dealership Portal home"><span class="monogram" aria-hidden="true">M</span><span class="brand-name">MULTIVAPS</span><span class="brand-divider">×</span><span class="portal-name">Dealership Portal</span></a>
+      <div class="header-meta"><div class="dealership-badge"><span class="dealer-title">Toyota Johannesburg</span><span class="dealer-address">124 Main Street, JHB</span></div><div class="user-status"><span class="login"><svg class="icon" aria-hidden="true"><use href="#phone"/></svg><span><small>Demo phone login</small>+27 82 555 0148</span></span><span class="online"><i aria-hidden="true"></i>Online</span></div></div>
+    </div>
+  </header>
+  <main id="main" class="container">
+    <!-- Vehicle summary: substitute real customer / dealer data here. -->
+    <section class="overview" aria-labelledby="dashboard-title">
+      <div class="welcome">
+        <h1 id="dashboard-title">Confidence.<br> <span>Every kilometre.</span></h1>
+        <p class="intro">Your vehicle. Your protection. All in one place.<br>Greater confidence for the journey ahead.</p>
+        <div class="vehicle-summary">
+          <svg class="icon vehicle-icon" aria-hidden="true"><use href="#car"/></svg>
+          <dl><div class="vehicle-name"><dt>Registered vehicle</dt><dd>Toyota Hilux 2.8 GD-6 RB Legend</dd></div><div><dt>Current odometer</dt><dd>48,500 km</dd></div><div><dt>Year model</dt><dd>2023</dd></div><div class="vehicle-identifiers"><dt>VIN / Registration</dt><dd>AHTK123456789X <span>·</span> JHB 884 GP</dd></div></dl>
+        </div>
+      </div>
+      <!-- SVG gauges: values are illustrative and can be data-bound later. -->
+      <div class="gauges" aria-label="Mock policy performance">
+        <div class="gauge" style="--progress:100; --gauge-color:var(--blue)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><strong>100<span>%</span></strong><span>Policy health</span><i></i></div></div>
+        <div class="gauge odometer-gauge" aria-label="Current odometer: 48,500 kilometres"><div class="gauge-container" aria-hidden="true"><div class="gauge-ticks"></div><div class="gauge-needle" id="gaugeNeedle"></div><div class="gauge-center-cap"></div></div><div class="gauge-readout"><strong>48.5k</strong><span>KM READOUT</span></div></div>
+        <div class="gauge" style="--progress:100; --gauge-color:var(--mint)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><strong class="active-value">Active</strong><span>Coverage status</span><i></i></div></div>
+      </div>
+    </section>
+    <div class="catalog-heading"><h2>Vehicle Coverage &amp; Available Products</h2><p>Active policies listed first · Select a product to view details or inquire</p></div>
+    <div id="policyGrid">
+    <!-- Active policy grid: app.js uses the single policy catalog below. -->
+    <section class="policy-section" aria-labelledby="active-title">
+      <div class="section-heading"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><div><h2 id="active-title">Active Policies</h2><p>Your current vehicle protection products.</p></div><span class="section-count" id="active-count"></span></div>
+      <div class="policy-grid" id="active-policies"></div>
+    </section>
+    <!-- Available product grid: inquiry controls open an accessible dialog. -->
+    <section class="policy-section available-section" aria-labelledby="available-title">
+      <div class="section-heading"><svg class="icon" aria-hidden="true"><use href="#layers"/></svg><div><h2 id="available-title">Available Dealer Policies</h2><p>Explore additional products for your vehicle.</p></div><span class="section-count muted-count" id="available-count"></span></div>
+      <div class="policy-grid" id="available-policies"></div>
+    </section>
+    </div>
+    <noscript><p>This demo needs JavaScript to display policy cards and dialogs. The supplied PDF files remain available in this folder.</p></noscript>
+  </main>
+  <!-- Portal footer: all vehicle, policy and login states are mock data. -->
+  <footer class="site-footer"><div class="footer-inner"><span class="footer-brand">MULTIVAPS <span>× Dealership Portal</span></span><p>Preview portal. Mock policies and dates. Supplied policy wording PDFs.</p><span>For demonstration purposes only.</span></div></footer>
+  <!-- One-time session welcome notice; Escape and the close button dismiss it. -->
+  <dialog id="demo-dialog" class="modal" aria-labelledby="demo-title" aria-describedby="demo-description">
+    <button class="close-button" type="button" data-close aria-label="Dismiss demo notice"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
+    <span class="modal-symbol"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg></span>
+    <p class="modal-kicker">MULTIVAPS × DEALERSHIP PORTAL</p><h2 id="demo-title">Welcome to your preview.</h2>
+    <p id="demo-description">This portal is in <strong>demo mode</strong> and will remain active for <strong>7 days</strong>. Vehicle details, coverage status, and policy dates are illustrative.</p>
+    <div class="modal-note">Explore the dashboard and preview the supplied policy wording documents. Inquiries are simulated.</div>
+    <button class="button primary full-width" type="button" data-close>Explore dashboard<svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
+  </dialog>
+  <!-- Inquiry form: replace the local confirmation with an authorized backend. -->
+  <dialog id="inquiryModal" class="modal" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <button class="close-button" id="modalClose" type="button" data-close aria-label="Close inquiry"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
+    <p class="modal-kicker">PRODUCT INQUIRY · DEMO</p><h2 id="modalTitle">Product Inquiry</h2><p id="inquiry-product" class="selected-product"></p><p id="modalDesc">Detailed policy overview and document review.</p>
+    <div class="modal-actions" id="product-actions"><a id="pdfLink" class="button download" target="_blank" rel="noopener" href="#">View PDF Brochure<svg class="icon" aria-hidden="true"><use href="#document"/></svg></a><button class="button primary" type="button" id="confirmInquireBtn">Request Call Back<svg class="icon" aria-hidden="true"><use href="#phone"/></svg></button></div>
+    <form id="inquiry-form" hidden><label for="customer-name">Your name</label><input id="customer-name" name="name" autocomplete="name" required maxlength="100" placeholder="e.g. Alex Morgan">
+      <label for="customer-phone">Phone number</label><input id="customer-phone" name="phone" type="tel" autocomplete="tel" required maxlength="25" pattern="[+0-9() .-]{7,25}" title="Enter a phone number using at least 7 digits or phone punctuation." placeholder="e.g. +27 82 555 0148">
+      <label for="customer-message">Message <span>(optional)</span></label><textarea id="customer-message" name="message" rows="3" maxlength="1000" placeholder="What would you like to know?"></textarea>
+      <p class="form-note">Demo only. Your details are not stored or sent to a dealer.</p><button class="button primary full-width" type="submit">Preview inquiry<svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
+    </form>
+    <div id="inquiry-success" hidden role="status"><span class="modal-symbol success-symbol"><svg class="icon" aria-hidden="true"><use href="#check"/></svg></span><h3>Inquiry preview complete.</h3><p id="success-copy"></p><p>This was a demo. No inquiry has been sent.</p><button class="button full-width" type="button" data-close>Back to dashboard</button></div>
+  </dialog>
+</body>
+</html>

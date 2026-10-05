@@ -1,0 +1,17 @@
+# Local editor / agent configuration
+.cursor/
+.superdesign/
+.windsurfrules
+CLAUDE.md
+.codex/
+.agents/
+
+# Local secrets and temporary verification artifacts
+.env
+.env.*
+!.env.example
+.qa-*
+node_modules/
+__pycache__/
+Thumbs.db
+.DS_Store
