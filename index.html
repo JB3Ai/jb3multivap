@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#10151d">
   <title>Multivap Portal | Toyota Johannesburg Demo</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Pinned local pdf-lib bundle: no CDN request at runtime. -->
+  <script src="vendor/pdf-lib-1.17.1.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -27,18 +29,23 @@
   </svg>
   <!-- Persistent demo notice. Remains visible when dialogs are dismissed. -->
   <div class="demo-banner" role="note"><span class="notice-mark" aria-hidden="true">!</span><span><strong>DEMO MODE</strong> — This portal is for preview purposes and will remain active for 7 days.</span></div>
+  <!-- Pitch toolbar: switches local demo views, not real authenticated accounts. -->
+  <nav class="demo-switcher-bar" aria-label="Demo Persona Switcher"><div class="switcher-inner"><span class="switcher-label">DEMO PERSONAS:</span><button class="switcher-btn active" type="button" data-persona="client1" aria-pressed="true">Client 1: Toyota Hilux (JHB)</button><button class="switcher-btn" type="button" data-persona="client2" aria-pressed="false">Client 2: BMW X5 (Sandton)</button><button class="switcher-btn" type="button" data-persona="client3" aria-pressed="false">Client 3: Merc C200 (Cape Town)</button><button class="switcher-btn admin-btn" type="button" data-persona="admin" aria-pressed="false">Admin Overview Console</button></div></nav>
   <!-- Dealership navigation and mock authenticated identity. -->
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#main" aria-label="Multivaps x Dealership Portal home"><span class="monogram" aria-hidden="true">M</span><span class="brand-name">MULTIVAPS</span><span class="brand-divider">×</span><span class="portal-name">Dealership Portal</span></a>
-      <div class="header-meta"><div class="dealership-badge"><span class="dealer-title">Toyota Johannesburg</span><span class="dealer-address">124 Main Street, JHB</span></div><div class="user-status"><span class="login"><svg class="icon" aria-hidden="true"><use href="#phone"/></svg><span><small>Demo phone login</small>+27 82 555 0148</span></span><span class="online"><i aria-hidden="true"></i>Online</span></div></div>
+      <div class="header-meta"><div class="dealership-badge"><span class="dealer-title">Toyota Johannesburg</span><span class="dealer-address">124 Main Street, JHB</span></div><div class="user-status"><span class="login"><svg class="icon" aria-hidden="true"><use href="#phone"/></svg><span><small id="login-label">Alex Morgan · Demo login</small><span id="login-phone">+27 82 555 0148</span></span></span><span class="online"><i aria-hidden="true"></i>Online</span></div></div>
     </div>
   </header>
+  <!-- Shared PDF feedback, announced for both dashboard and modal actions. -->
+  <p id="pdf-status" class="pdf-status" role="status" hidden></p>
   <main id="main" class="container">
     <!-- Vehicle summary: substitute real customer / dealer data here. -->
     <section class="overview" aria-labelledby="dashboard-title">
       <div class="welcome">
-        <h1 id="dashboard-title">Confidence.<br> <span>Every kilometre.</span></h1>
+        <h1 id="dashboard-title" tabindex="-1">Confidence.<br> <span>Every kilometre.</span></h1>
+        <p id="client-name" class="client-name">Alex Morgan · Demo client</p>
         <p class="intro">Your vehicle. Your protection. All in one place.<br>Greater confidence for the journey ahead.</p>
         <div class="vehicle-summary">
           <svg class="icon vehicle-icon" aria-hidden="true"><use href="#car"/></svg>
@@ -47,16 +54,16 @@
       </div>
       <!-- SVG gauges: values are illustrative and can be data-bound later. -->
       <div class="gauges" aria-label="Mock policy performance">
-        <div class="gauge" style="--progress:100; --gauge-color:var(--blue)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><strong>100<span>%</span></strong><span>Policy health</span><i></i></div></div>
+        <div id="health-gauge" class="gauge" style="--progress:100; --gauge-color:var(--blue)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><strong id="health-value">100<span>%</span></strong><span>Policy health</span><i></i></div></div>
         <div class="gauge odometer-gauge" aria-label="Current odometer: 48,500 kilometres"><div class="gauge-container" aria-hidden="true"><div class="gauge-ticks"></div><div class="gauge-needle" id="gaugeNeedle"></div><div class="gauge-center-cap"></div></div><div class="gauge-readout"><strong>48.5k</strong><span>KM READOUT</span></div></div>
-        <div class="gauge" style="--progress:100; --gauge-color:var(--mint)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><strong class="active-value">Active</strong><span>Coverage status</span><i></i></div></div>
+        <div id="coverage-gauge" class="gauge" style="--progress:100; --gauge-color:var(--mint)"><svg class="gauge-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-track" cx="60" cy="60" r="49"/><circle class="ring-value" cx="60" cy="60" r="49" pathLength="100"/></svg><div class="gauge-content"><svg class="icon" aria-hidden="true"><use href="#check"/></svg><strong class="active-value" id="coverage-value">Active</strong><span>Coverage status</span><i></i></div></div>
       </div>
     </section>
     <div class="catalog-heading"><h2>Vehicle Coverage &amp; Available Products</h2><p>Active policies listed first · Select a product to view details or inquire</p></div>
     <div id="policyGrid">
     <!-- Active policy grid: app.js uses the single policy catalog below. -->
     <section class="policy-section" aria-labelledby="active-title">
-      <div class="section-heading"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><div><h2 id="active-title">Active Policies</h2><p>Your current vehicle protection products.</p></div><span class="section-count" id="active-count"></span></div>
+      <div class="section-heading"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><div><h2 id="active-title">Active Policies</h2><p id="registered-description">Your current vehicle protection products.</p></div><span class="section-count" id="active-count"></span></div>
       <div class="policy-grid" id="active-policies"></div>
     </section>
     <!-- Available product grid: inquiry controls open an accessible dialog. -->
@@ -67,8 +74,31 @@
     </div>
     <noscript><p>This demo needs JavaScript to display policy cards and dialogs. The supplied PDF files remain available in this folder.</p></noscript>
   </main>
+  <!-- Admin overview: all counters and matrix rows derive from demoPersonas. -->
+  <main id="admin-view" class="container admin-container" hidden aria-labelledby="admin-title">
+    <div class="admin-header"><h1 id="admin-title">Multivap Dealer Network Admin Console</h1><p>Central oversight of active clients, dealership product matrices, and secondary policy engagement.</p></div>
+    <div class="admin-stats-grid">
+      <div class="stat-card"><svg class="icon" aria-hidden="true"><use href="#shield"/></svg><div><span class="stat-value" id="stat-clients"></span><span class="stat-label">Demo Clients</span></div></div>
+      <div class="stat-card"><svg class="icon" aria-hidden="true"><use href="#car"/></svg><div><span class="stat-value" id="stat-dealers"></span><span class="stat-label">Onboarded Dealerships</span></div></div>
+      <div class="stat-card"><svg class="icon" aria-hidden="true"><use href="#document"/></svg><div><span class="stat-value" id="stat-catalog"></span><span class="stat-label">Master PDF Catalog</span></div></div>
+      <div class="stat-card"><svg class="icon" aria-hidden="true"><use href="#layers"/></svg><div><span class="stat-value" id="stat-listed"></span><span class="stat-label">Total Listed Products</span></div></div>
+    </div>
+    <p id="admin-coverage-summary" class="admin-coverage-summary"></p>
+    <section class="admin-matrix" aria-labelledby="matrix-title"><h2 id="matrix-title">Active Client &amp; Dealership Matrix</h2><div class="admin-table-wrapper" tabindex="0" role="region" aria-label="Client and dealership matrix; scroll horizontally on smaller screens"><table class="admin-table"><caption class="sr-only">Demo client vehicles, registered coverage and dealership product availability</caption><thead><tr><th scope="col">Client &amp; Phone</th><th scope="col">Vehicle</th><th scope="col">Dealership</th><th scope="col">Registered Policy</th><th scope="col">Matrix Products Available</th><th scope="col">Action</th></tr></thead><tbody id="admin-table-body"></tbody></table></div></section>
+  </main>
   <!-- Portal footer: all vehicle, policy and login states are mock data. -->
-  <footer class="site-footer"><div class="footer-inner"><span class="footer-brand">MULTIVAPS <span>× Dealership Portal</span></span><p>Preview portal. Mock policies and dates. Supplied policy wording PDFs.</p><span>For demonstration purposes only.</span></div></footer>
+  <footer class="site-footer"><div class="footer-inner"><span class="footer-brand">MULTIVAPS <span>× Dealership Portal</span></span><p>Preview portal. Mock policies and dates. Supplied policy wording PDFs.</p><button id="replay-intro" class="intro-replay" type="button">Replay intro</button><span>For demonstration purposes only.</span></div></footer>
+  <!-- Supplied landing animation, scoped to avoid dashboard CSS collisions. -->
+  <dialog id="portal-intro" class="portal-intro" aria-label="Multivap Solutions introduction">
+    <div class="intro-demo-notice"><span class="notice-mark" aria-hidden="true">!</span><span><strong>DEMO MODE</strong> — This portal is for preview purposes and will remain active for 7 days.</span></div>
+    <div class="intro-stage">
+      <div class="intro-container">
+        <svg class="intro-gear" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 10 L58 22 L72 18 L74 32 L88 36 L82 48 L92 58 L80 64 L82 78 L68 76 L62 88 L54 78 L42 82 L40 70 L26 66 L32 54 L22 44 L34 38 L32 24 L46 26 Z M50 30 A20 20 0 1 0 50 70 A20 20 0 1 0 50 30 Z"/><text x="50" y="58" text-anchor="middle" fill="black" font-size="28" font-weight="bold" font-family="serif">M</text></svg>
+        <div class="intro-text-group"><h2 class="intro-brand-name">multivap</h2><p class="intro-sub-text">SOLUTIONS</p></div>
+      </div>
+      <button id="enter-portal" class="intro-enter" type="button" autofocus>Enter portal<svg class="icon" aria-hidden="true"><use href="#arrow"/></svg></button>
+    </div>
+  </dialog>
   <!-- One-time session welcome notice; Escape and the close button dismiss it. -->
   <dialog id="demo-dialog" class="modal" aria-labelledby="demo-title" aria-describedby="demo-description">
     <button class="close-button" type="button" data-close aria-label="Dismiss demo notice"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
@@ -82,7 +112,8 @@
   <dialog id="inquiryModal" class="modal" aria-labelledby="modalTitle" aria-describedby="modalDesc">
     <button class="close-button" id="modalClose" type="button" data-close aria-label="Close inquiry"><svg class="icon" aria-hidden="true"><use href="#close"/></svg></button>
     <p class="modal-kicker">PRODUCT INQUIRY · DEMO</p><h2 id="modalTitle">Product Inquiry</h2><p id="inquiry-product" class="selected-product"></p><p id="modalDesc">Detailed policy overview and document review.</p>
-    <div class="modal-actions" id="product-actions"><a id="pdfLink" class="button download" target="_blank" rel="noopener" href="#">View PDF Brochure<svg class="icon" aria-hidden="true"><use href="#document"/></svg></a><button class="button primary" type="button" id="confirmInquireBtn">Request Call Back<svg class="icon" aria-hidden="true"><use href="#phone"/></svg></button></div>
+    <div class="modal-actions" id="product-actions"><button id="pdfLink" class="button download" type="button">View PDF Brochure<svg class="icon" aria-hidden="true"><use href="#document"/></svg></button><button class="button primary" type="button" id="confirmInquireBtn">Request Call Back<svg class="icon" aria-hidden="true"><use href="#phone"/></svg></button></div>
+    <p id="modal-pdf-status" class="modal-pdf-status" role="status" hidden></p>
     <form id="inquiry-form" hidden><label for="customer-name">Your name</label><input id="customer-name" name="name" autocomplete="name" required maxlength="100" placeholder="e.g. Alex Morgan">
       <label for="customer-phone">Phone number</label><input id="customer-phone" name="phone" type="tel" autocomplete="tel" required maxlength="25" pattern="[+0-9() .-]{7,25}" title="Enter a phone number using at least 7 digits or phone punctuation." placeholder="e.g. +27 82 555 0148">
       <label for="customer-message">Message <span>(optional)</span></label><textarea id="customer-message" name="message" rows="3" maxlength="1000" placeholder="What would you like to know?"></textarea>
